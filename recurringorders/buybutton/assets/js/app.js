@@ -62,7 +62,7 @@ function useProduct(product_el){
 }
 
 function exists(element){
-	return typeof element !== 'undefined';
+	return typeof element !== 'undefined' && element != null;
 }
 
 function backToStep2(){
