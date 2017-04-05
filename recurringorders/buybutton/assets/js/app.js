@@ -10,8 +10,12 @@ function httpGetAsync(url, callback=function(){})
 {
 	var xmlHttp = new XMLHttpRequest();
 	xmlHttp.onreadystatechange = function() { 
-		if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+		if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
 			callback(xmlHttp.responseText);
+		}
+		else if(xmlHttp.status == 404){
+			callback(new Error('Unable to find products because a small install is needed on the store before this tool can operate. Please contact support@boldcommerce.com.'));
+		}
 	}
 	xmlHttp.open("GET", url, true);
 	xmlHttp.send(null);
@@ -253,8 +257,18 @@ function displayProductCards(page){
 
 function getProductDataFromPage(callback){
 	httpGetAsync("https://" + myshopify_domain + "/pages/ro-get-products", function(response){
-		productData = JSON.parse(response);
-		callback(productData);
+		if(typeof response == 'object'){
+			document.getElementById('myshopify-error-message').innerHTML = response.name + ': ' + response.message; 
+			document.getElementById('myshopify-error').style.display = "block";
+			overlayHide('loading', function(){
+				overlayShow('who-are-you');
+			});
+		}
+		else{
+			productData = JSON.parse(response);
+			document.getElementById('myshopify-error').style.display = "none";
+			callback(productData);
+		}
 	});
 }
 

@@ -5,6 +5,9 @@ body{
   background:#ccc;
   position:relative;
 }
+#myshopify-error{
+  text-align:left;
+}
 
 #complete-1, #complete-2, #complete-3{
   display:none;
